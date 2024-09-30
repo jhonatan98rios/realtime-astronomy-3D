@@ -13,7 +13,14 @@ export class EarthModel {
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.xr.enabled = true;  // Certifique-se de que o XR está habilitado
+
         document.body.appendChild(this.renderer.domElement);
+        window.addEventListener('resize', () => {
+            this.camera.aspect = window.innerWidth / window.innerHeight;
+            this.camera.updateProjectionMatrix();
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+        });
 
         this.addLight()
         this.loadTextures()
@@ -47,24 +54,21 @@ export class EarthModel {
         this.scene.add(earthMesh);
 
         // Nuvens da Terra
-        const cloudGeometry = new THREE.SphereGeometry(1, 32, 32);
-        const cloudMaterial = new THREE.MeshLambertMaterial({
-            map: this.textures.earthClouds,
-            transparent: true,
-        });
-        const cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
+        // const cloudGeometry = new THREE.SphereGeometry(1, 32, 32);
+        // const cloudMaterial = new THREE.MeshLambertMaterial({
+        //     map: this.textures.earthClouds,
+        //     transparent: true,
+        // });
+        //const cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
         //this.scene.add(cloudMesh);
-        this.camera.position.z = 3;
+        this.camera.position.set(0, 1.6, 3); // Ajuste para altura VR e posição adequada
     }
 
     animate() {
-        requestAnimationFrame(this.animate.bind(this));
-        
-        // Rotacionar a Terra
-        //this.textures.earthMesh.rotation += 0.001;
-        //this.textures.cloudMesh.rotation += 0.0015;
-        
-        this.renderer.render(this.scene, this.camera);
+        this.renderer.setAnimationLoop(() => {
+            // Atualize a animação aqui (rotação ou outras interações)
+            this.renderer.render(this.scene, this.camera);
+        });
     }
 
 }

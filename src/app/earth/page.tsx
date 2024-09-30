@@ -12,12 +12,8 @@ export default function Earth() {
 
     if (initialized.current) return
     initialized.current = true
-    
     const model = new EarthModel()
-    model.animate()
-    
     document.body.appendChild(VRButton.createButton(model.renderer));
-    model.renderer.xr.enabled = true;
   }, [])
 
   return (
