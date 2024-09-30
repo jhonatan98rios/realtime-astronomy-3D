@@ -61,7 +61,7 @@ export class EarthModel {
         // });
         //const cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
         //this.scene.add(cloudMesh);
-        this.camera.position.set(0, 1.6, 3); // Ajuste para altura VR e posição adequada
+        this.camera.position.set(0, 0, 3); // Ajuste para altura VR e posição adequada
     }
 
     animate() {
