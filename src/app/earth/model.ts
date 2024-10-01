@@ -41,20 +41,14 @@ export class EarthModel {
 
     addLight() {
         const ambientLight = new THREE.AmbientLight(0x202020); // Luz fraca para suavizar sombras
-        //ambientLight.castShadow = true
+        ambientLight.castShadow = true
         this.scene.add(ambientLight);
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         directionalLight.position.set(5, 3, 5);  // Simulando a luz do sol
-        //directionalLight.castShadow = true
+        directionalLight.castShadow = true
         this.scene.add(directionalLight);
     }
-
-    // addLight() {
-    //     this.light = new THREE.DirectionalLight(0xffffff, 1);
-    //     this.light.position.set(5, 3, 5);
-    //     this.scene.add(this.light);
-    // }
 
     loadTextures() {
         const textureLoader = new THREE.TextureLoader();
