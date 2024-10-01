@@ -23,6 +23,10 @@ export class EarthModel {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.xr.enabled = true;  // Certifique-se de que o XR está habilitado
 
+        this.renderer.xr.addEventListener('sessionstart', () => {
+            this.cameraController.focusOut() // Define uma posição fixada ao entrar no VR
+        });
+
         document.body.appendChild(this.renderer.domElement);
         window.addEventListener('resize', () => {
             this.cameraController.resize()
