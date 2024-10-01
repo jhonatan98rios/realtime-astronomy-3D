@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { MoonModel } from './moonModel'
 
 export class EarthModel {
 
@@ -7,6 +8,9 @@ export class EarthModel {
     renderer: THREE.WebGLRenderer
     light?: THREE.DirectionalLight
     textures: { [key: string]: THREE.Texture } = {}
+    //@ts-ignore
+    mesh: THREE.Mesh
+    satellites: MoonModel[] = []
 
     constructor() {
         this.scene = new THREE.Scene();
@@ -25,6 +29,8 @@ export class EarthModel {
         this.addLight()
         this.loadTextures()
         this.loadGeometry()
+        this.loadSatellites()
+
         this.animate();
     }
 
@@ -45,13 +51,13 @@ export class EarthModel {
         const earthMaterial = new THREE.MeshPhongMaterial({
             map: this.textures.earthTexture,
             bumpMap: this.textures.earthBumpMap,
-            bumpScale: 0.05,
+            bumpScale: 2,
         });
     
         // Geometria da Terra
         const earthGeometry = new THREE.SphereGeometry(1, 32, 32);
-        const earthMesh = new THREE.Mesh(earthGeometry, earthMaterial);
-        this.scene.add(earthMesh);
+        this.mesh = new THREE.Mesh(earthGeometry, earthMaterial);
+        this.scene.add(this.mesh);
 
         // Nuvens da Terra
         // const cloudGeometry = new THREE.SphereGeometry(1, 32, 32);
@@ -61,13 +67,32 @@ export class EarthModel {
         // });
         //const cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
         //this.scene.add(cloudMesh);
-        this.camera.position.set(0, 0, 3); // Ajuste para altura VR e posição adequada
+        this.camera.position.set(0, 0, 10); // Ajuste para altura VR e posição adequada
+    }
+
+    loadSatellites() {
+        this.satellites.push(new MoonModel({
+            texture: {
+                map: 'earth/moon/moonmap2k.jpg',
+                bump: 'earth/moon/moonmap2k.jpg',
+            }
+        }))
+
+
+        this.satellites.forEach(satellite => {
+            this.scene.add(satellite.mesh)
+        })
     }
 
     animate() {
         this.renderer.setAnimationLoop(() => {
             // Atualize a animação aqui (rotação ou outras interações)
             this.renderer.render(this.scene, this.camera);
+            this.mesh.rotation.y += 0.001;
+
+            this.satellites.forEach(satellite => {
+                satellite.animate()
+            })
         });
     }
 
