@@ -1,9 +1,10 @@
 import * as THREE from 'three'
 
 export type MoonModelProps = {
-    texture: {
+    textures: {
         map: string,
-        bump: string
+        bump: string,
+        normal: string
     }
 }
 
@@ -18,24 +19,27 @@ export class MoonModel {
     orbitSpeed = 0.001; // Velocidade da órbita, proporcional aos 27,3 dias
 
     constructor(props: MoonModelProps) {
-        this.loadTextures(props.texture)
+        this.loadTextures(props.textures)
         this.loadGeometry()
     }
 
-    loadTextures(texture: MoonModelProps['texture']) {
+    loadTextures(textures: MoonModelProps['textures']) {
         const textureLoader = new THREE.TextureLoader();
-        this.textures.moonTexture = textureLoader.load(texture.map);
-        this.textures.moonBumpMap = textureLoader.load(texture.map);
+        this.textures.moonTexture = textureLoader.load(textures.map);
+        this.textures.moonBumpMap = textureLoader.load(textures.bump);
+        this.textures.moonNormalMap = textureLoader.load(textures.normal);
     }
 
     loadGeometry() {
         const moonMaterial = new THREE.MeshPhongMaterial({
             map: this.textures.moonTexture,
             bumpMap: this.textures.moonBumpMap,  // Aplicando o bump map
-            bumpScale: 1  // Ajuste a intensidade do relevo (aumente ou diminua conforme necessário)
+            bumpScale: 1,  // Ajuste a intensidade do relevo 
+            normalMap: this.textures.moonNormalMap,
         });
         const moonGeometry = new THREE.SphereGeometry(0.27, 32, 32);  // Tamanho proporcional à Terra
         this.mesh = new THREE.Mesh(moonGeometry, moonMaterial);
+        this.mesh.castShadow = true
     }
 
     animate() {

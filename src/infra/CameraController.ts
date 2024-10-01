@@ -28,7 +28,7 @@ export class CameraController {
     update() {
         if (this.targetObject) {
             const targetPosition = this.targetObject.position.clone()
-            const offset = new THREE.Vector3(0, 0, 3)  // Offset para garantir que a câmera não fique dentro do objeto
+            const offset = new THREE.Vector3(0, 0, 2.5)  // Offset para garantir que a câmera não fique dentro do objeto
             const desiredPosition = targetPosition.clone().add(offset)
 
             if (this.isTransitioning) {

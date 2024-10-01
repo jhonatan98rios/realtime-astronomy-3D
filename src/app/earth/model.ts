@@ -11,6 +11,8 @@ export class EarthModel {
     textures: { [key: string]: THREE.Texture } = {}
     //@ts-ignore
     mesh: THREE.Mesh
+    //@ts-ignore
+    cloudMesh: THREE.Mesh
     satellites: MoonModel[] = []
 
     constructor() {
@@ -30,52 +32,89 @@ export class EarthModel {
         this.addLight()
         this.loadTextures()
         this.loadGeometry()
+        this.loadClouds()
+        this.loadAtmosphere()
         this.loadSatellites()
 
         this.animate();
     }
 
     addLight() {
-        this.light = new THREE.DirectionalLight(0xffffff, 1);
-        this.light.position.set(5, 3, 5);
-        this.scene.add(this.light);
+        const ambientLight = new THREE.AmbientLight(0x202020); // Luz fraca para suavizar sombras
+        //ambientLight.castShadow = true
+        this.scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 3, 5);  // Simulando a luz do sol
+        //directionalLight.castShadow = true
+        this.scene.add(directionalLight);
     }
+
+    // addLight() {
+    //     this.light = new THREE.DirectionalLight(0xffffff, 1);
+    //     this.light.position.set(5, 3, 5);
+    //     this.scene.add(this.light);
+    // }
 
     loadTextures() {
         const textureLoader = new THREE.TextureLoader();
-        this.textures.earthTexture = textureLoader.load('earth/earthmap10k.jpg');
+        this.textures.earthTexture = textureLoader.load('earth/earthmap.jpg');
         this.textures.earthBumpMap = textureLoader.load('earth/earthbump.jpg');
-        this.textures.earthClouds = textureLoader.load('earth/earthcloudmaptrans.jpg');
+        this.textures.earthClouds = textureLoader.load('earth/2k_earth_clouds.jpg');
+        this.textures.earthSpecularMap = textureLoader.load('earth/earthspec.jpg');
+        this.textures.earthEmissiveMap = textureLoader.load('earth/earthemissivemap.tif');
     }
 
     loadGeometry() {
         const earthMaterial = new THREE.MeshPhongMaterial({
-            map: this.textures.earthTexture,
-            bumpMap: this.textures.earthBumpMap,
-            bumpScale: 2,
+            map: this.textures.earthTexture,         // Textura base da Terra
+            bumpMap: this.textures.earthBumpMap,     // Mapa de relevos
+            bumpScale: 5,                            // Escala do relevo
+            specularMap: this.textures.earthSpecularMap, // Mapa de especularidade (reflexos nos oceanos)
+            specular: new THREE.Color(0x333333),     // Intensidade da reflexão
+            emissiveMap: this.textures.earthEmissiveMap, // Mapa de emissão para luzes de cidades à noite
+            emissive: new THREE.Color(0x222222),     // Cor da emissão
         });
     
         // Geometria da Terra
         const earthGeometry = new THREE.SphereGeometry(1, 32, 32);
         this.mesh = new THREE.Mesh(earthGeometry, earthMaterial);
+        this.mesh.castShadow = true
         this.scene.add(this.mesh);
 
-        // Nuvens da Terra
-        // const cloudGeometry = new THREE.SphereGeometry(1, 32, 32);
-        // const cloudMaterial = new THREE.MeshLambertMaterial({
-        //     map: this.textures.earthClouds,
-        //     transparent: true,
-        // });
-        //const cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
-        //this.scene.add(cloudMesh);
         this.cameraController.camera.position.set(0, 0, 10); // Ajuste para altura VR e posição adequada
     }
 
+    loadAtmosphere() {
+        const atmosphereGeometry = new THREE.SphereGeometry(1.02, 32, 32);  // Um pouco maior que a Terra
+        const atmosphereMaterial = new THREE.MeshPhongMaterial({
+            color: 0x00aaff,  // Azul claro
+            transparent: true,
+            opacity: 0.25,  // Transparência baixa para um efeito sutil
+            blending: THREE.AdditiveBlending,
+        });
+        const atmosphereMesh = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+        this.scene.add(atmosphereMesh);
+    }
+
+    loadClouds() {
+        const cloudGeometry = new THREE.SphereGeometry(1.01, 32, 32);  // Levemente maior que a Terra
+        const cloudMaterial = new THREE.MeshPhongMaterial({
+            map: this.textures.earthClouds,
+            transparent: true,
+            opacity: 0.7,  // Semitransparente
+        });
+        this.cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
+        this.scene.add(this.cloudMesh);
+    }
+
+
     loadSatellites() {
         this.satellites.push(new MoonModel({
-            texture: {
+            textures: {
                 map: 'earth/moon/moonmap2k.jpg',
                 bump: 'earth/moon/moonmap2k.jpg',
+                normal: 'earth/moon/moon_normal_map.jpg',
             }
         }))
 
@@ -88,15 +127,23 @@ export class EarthModel {
     animate() {
         this.renderer.setAnimationLoop(() => {
             // Atualize a animação aqui (rotação ou outras interações)
-            this.renderer.render(this.scene, this.cameraController.camera);
+
+            // Atualizar a rotação da Terra
             this.mesh.rotation.y += 0.001;
+
+            // Rotação das nuvens (mais lenta)
+            this.cloudMesh.rotation.y += 0.0005;  // Rotação mais sutil das nuvens
             
+            // Animar satélites (como a Lua)
             this.satellites.forEach(satellite => {
                 satellite.animate()
             })
 
             // Atualiza a posição da câmera com base no objeto focado
             this.cameraController.update();
+
+            // Renderizar a cena
+            this.renderer.render(this.scene, this.cameraController.camera);
         });
     }
 
