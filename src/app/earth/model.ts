@@ -1,10 +1,11 @@
 import * as THREE from 'three'
 import { MoonModel } from './moonModel'
+import { CameraController } from '@/infra/CameraController'
 
 export class EarthModel {
 
     scene: THREE.Scene
-    camera: THREE.PerspectiveCamera
+    cameraController: CameraController
     renderer: THREE.WebGLRenderer
     light?: THREE.DirectionalLight
     textures: { [key: string]: THREE.Texture } = {}
@@ -14,15 +15,15 @@ export class EarthModel {
 
     constructor() {
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.cameraController = new CameraController();
+        
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.xr.enabled = true;  // Certifique-se de que o XR está habilitado
 
         document.body.appendChild(this.renderer.domElement);
         window.addEventListener('resize', () => {
-            this.camera.aspect = window.innerWidth / window.innerHeight;
-            this.camera.updateProjectionMatrix();
+            this.cameraController.resize()
             this.renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
@@ -67,7 +68,7 @@ export class EarthModel {
         // });
         //const cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
         //this.scene.add(cloudMesh);
-        this.camera.position.set(0, 0, 10); // Ajuste para altura VR e posição adequada
+        this.cameraController.camera.position.set(0, 0, 10); // Ajuste para altura VR e posição adequada
     }
 
     loadSatellites() {
@@ -87,14 +88,31 @@ export class EarthModel {
     animate() {
         this.renderer.setAnimationLoop(() => {
             // Atualize a animação aqui (rotação ou outras interações)
-            this.renderer.render(this.scene, this.camera);
+            this.renderer.render(this.scene, this.cameraController.camera);
             this.mesh.rotation.y += 0.001;
-
+            
             this.satellites.forEach(satellite => {
                 satellite.animate()
             })
+
+            // Atualiza a posição da câmera com base no objeto focado
+            this.cameraController.update();
         });
     }
 
+    focusOut() {
+        this.cameraController.focusOut()
+    }
+
+    focusOnEarth() {
+        this.cameraController.focusOnObject(this.mesh);
+        window.history.pushState({}, '', '#');
+    }
+
+    focusOnMoon() {
+        const moonMesh = this.satellites[0].mesh       
+        this.cameraController.focusOnObject(moonMesh);
+        window.history.pushState({}, '', '#moon');
+    }
 }
 
