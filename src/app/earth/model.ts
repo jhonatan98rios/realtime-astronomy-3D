@@ -14,6 +14,7 @@ export class EarthModel {
     //@ts-ignore
     cloudMesh: THREE.Mesh
     satellites: MoonModel[] = []
+    canvas: HTMLCanvasElement
 
     constructor() {
         this.scene = new THREE.Scene();
@@ -23,11 +24,13 @@ export class EarthModel {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.xr.enabled = true;  // Certifique-se de que o XR está habilitado
 
-        this.renderer.xr.addEventListener('sessionstart', () => {
-            this.cameraController.focusOut() // Define uma posição fixada ao entrar no VR
-        });
+        // this.renderer.xr.addEventListener('sessionstart', () => {
+        //     this.cameraController.focusOut() // Define uma posição fixada ao entrar no VR
+        // });
 
-        document.body.appendChild(this.renderer.domElement);
+        this.canvas = this.renderer.domElement
+        document.body.appendChild(this.canvas)
+        
         window.addEventListener('resize', () => {
             this.cameraController.resize()
             this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -60,7 +63,7 @@ export class EarthModel {
         this.textures.earthBumpMap = textureLoader.load('earth/earthbump.jpg');
         this.textures.earthClouds = textureLoader.load('earth/2k_earth_clouds.jpg');
         this.textures.earthSpecularMap = textureLoader.load('earth/earthspec.jpg');
-        this.textures.earthEmissiveMap = textureLoader.load('earth/earthemissivemap.tif');
+        this.textures.earthEmissiveMap = textureLoader.load('earth/earthemissivemap.jpg');
     }
 
     loadGeometry() {
@@ -79,8 +82,6 @@ export class EarthModel {
         this.mesh = new THREE.Mesh(earthGeometry, earthMaterial);
         this.mesh.castShadow = true
         this.scene.add(this.mesh);
-
-        this.cameraController.camera.position.set(0, 0, 10); // Ajuste para altura VR e posição adequada
     }
 
     loadAtmosphere() {
@@ -138,7 +139,7 @@ export class EarthModel {
             })
 
             // Atualiza a posição da câmera com base no objeto focado
-            this.cameraController.update();
+            this.cameraController.update(this.satellites[0].mesh.position);
 
             // Renderizar a cena
             this.renderer.render(this.scene, this.cameraController.camera);
@@ -150,14 +151,12 @@ export class EarthModel {
     }
 
     focusOnEarth() {
-        this.cameraController.focusOnObject(this.mesh);
-        window.history.pushState({}, '', '#');
+        this.cameraController.focusOnPlanet();
     }
 
     focusOnMoon() {
-        const moonMesh = this.satellites[0].mesh       
-        this.cameraController.focusOnObject(moonMesh);
-        window.history.pushState({}, '', '#moon');
+        const moonPosition = this.satellites[0].mesh.position   
+        this.cameraController.focusOnMoon(moonPosition);
     }
 }
 

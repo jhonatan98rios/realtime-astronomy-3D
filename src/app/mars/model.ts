@@ -1,24 +1,29 @@
+import { CameraController } from '@/infra/CameraController'
 import * as THREE from 'three'
 
 export class MarsModel {
 
     scene: THREE.Scene
-    camera: THREE.PerspectiveCamera
+    cameraController: CameraController
     renderer: THREE.WebGLRenderer
     light?: THREE.DirectionalLight
     textures: { [key: string]: THREE.Texture } = {}
+    canvas: HTMLCanvasElement
+    //@ts-ignore
+    mesh: THREE.Mesh
 
     constructor() {
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.cameraController = new CameraController();
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.xr.enabled = true;  // Certifique-se de que o XR está habilitado
 
-        document.body.appendChild(this.renderer.domElement);
+        this.canvas = this.renderer.domElement
+        document.body.appendChild(this.canvas)
+
         window.addEventListener('resize', () => {
-            this.camera.aspect = window.innerWidth / window.innerHeight;
-            this.camera.updateProjectionMatrix();
+            this.cameraController.resize()
             this.renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
@@ -50,8 +55,8 @@ export class MarsModel {
     
         // Geometria da Terra
         const marsGeometry = new THREE.SphereGeometry(1, 32, 32);
-        const marsMesh = new THREE.Mesh(marsGeometry, marsMaterial);
-        this.scene.add(marsMesh);
+        this.mesh = new THREE.Mesh(marsGeometry, marsMaterial);
+        this.scene.add(this.mesh);
 
         // Nuvens da Terra
         // const cloudGeometry = new THREE.SphereGeometry(1, 32, 32);
@@ -61,14 +66,24 @@ export class MarsModel {
         // });
         //const cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
         //this.scene.add(cloudMesh);
-        this.camera.position.set(0, 0, 3); // Ajuste para altura VR e posição adequada
     }
 
     animate() {
         this.renderer.setAnimationLoop(() => {
             // Atualize a animação aqui (rotação ou outras interações)
-            this.renderer.render(this.scene, this.camera);
+            this.cameraController.update(this.mesh.position);
+
+            this.renderer.render(this.scene,  this.cameraController.camera);
         });
+    }
+
+    focusOut() {
+        this.cameraController.focusOut()
+    }
+
+    focusOnMars() {
+        this.cameraController.focusOnPlanet();
+        window.history.pushState({}, '', '#');
     }
 
 }
