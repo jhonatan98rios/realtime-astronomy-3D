@@ -22,7 +22,7 @@ export class SaturnModel {
         this.renderer.xr.enabled = true;  // Certifique-se de que o XR está habilitado
 
         this.renderer.xr.addEventListener('sessionstart', () => {
-            this.scene.position.z = -1.5
+            this.scene.position.z = -3
             this.scene.position.y = 1
         });
 
