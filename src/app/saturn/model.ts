@@ -1,9 +1,10 @@
+import { CameraController } from '@/infra/CameraController'
 import * as THREE from 'three'
 
 export class SaturnModel {
 
     scene: THREE.Scene
-    camera: THREE.PerspectiveCamera
+    cameraController: CameraController
     renderer: THREE.WebGLRenderer
     light?: THREE.DirectionalLight
     textures: { [key: string]: THREE.Texture } = {}
@@ -11,18 +12,25 @@ export class SaturnModel {
     mesh: THREE.Mesh
     //@ts-ignore
     ringMesh: THREE.Mesh
+    canvas: HTMLCanvasElement
 
     constructor() {
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.cameraController = new CameraController();
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.xr.enabled = true;  // Certifique-se de que o XR está habilitado
 
-        document.body.appendChild(this.renderer.domElement);
+        this.renderer.xr.addEventListener('sessionstart', () => {
+            this.scene.position.z = -1.5
+            this.scene.position.y = 1
+        });
+
+        this.canvas = this.renderer.domElement
+        document.body.appendChild(this.canvas)
+
         window.addEventListener('resize', () => {
-            this.camera.aspect = window.innerWidth / window.innerHeight;
-            this.camera.updateProjectionMatrix();
+            this.cameraController.resize()
             this.renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
@@ -53,8 +61,8 @@ export class SaturnModel {
         const textureLoader = new THREE.TextureLoader();
         this.textures.saturnTexture = textureLoader.load('saturn/saturnmap.jpg');
         this.textures.ringTexture = textureLoader.load('saturn/saturnringcolor.png');
-        this.textures.ringTexture.rotation = Math.PI / 2;
         this.textures.ringAlpha = textureLoader.load('saturn/saturnringalpha.png');
+        this.textures.ringTexture.rotation = Math.PI / 2;
     }
 
     loadGeometry() {
@@ -72,7 +80,7 @@ export class SaturnModel {
         this.mesh.castShadow = true
         
         this.scene.add(this.mesh);
-        this.camera.position.set(0, 0, 5); // Ajuste para altura VR e posição adequada
+        this.cameraController.camera.position.set(0, 0, 5); // Ajuste para altura VR e posição adequada
     }
 
     loadRings() {
@@ -120,15 +128,11 @@ export class SaturnModel {
         this.scene.add(atmosphereMesh);
     }
 
-
     animate() {
         this.renderer.setAnimationLoop(() => {
             // Atualize a animação aqui (rotação ou outras interações)
             this.ringMesh.rotation.z += 0.001;
-
-            this.renderer.render(this.scene, this.camera);
+            this.renderer.render(this.scene, this.cameraController.camera);
         });
     }
-
 }
-

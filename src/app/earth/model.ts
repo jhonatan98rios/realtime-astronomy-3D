@@ -160,4 +160,3 @@ export class EarthModel {
         this.cameraController.focusOnMoon(moonPosition);
     }
 }
-
