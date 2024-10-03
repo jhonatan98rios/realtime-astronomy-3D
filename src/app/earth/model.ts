@@ -24,9 +24,13 @@ export class EarthModel {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.xr.enabled = true;  // Certifique-se de que o XR está habilitado
 
-        // this.renderer.xr.addEventListener('sessionstart', () => {
-        //     this.cameraController.focusOut() // Define uma posição fixada ao entrar no VR
-        // });
+        this.renderer.xr.addEventListener('sessionstart', () => {
+            this.cameraController.camera.position.set(0, 0, 0);
+            //this.renderer.vr.getStandingMatrix();
+            this.scene.position.y = -2;
+            this.scene.position.z = -2;
+            alert("sessionstart")
+        });
 
         this.canvas = this.renderer.domElement
         document.body.appendChild(this.canvas)
