@@ -26,7 +26,7 @@ export class EarthModel {
 
         this.renderer.xr.addEventListener('sessionstart', () => {
             this.scene.position.z = -1
-            this.scene.position.y = 3
+            this.scene.position.y = 1
         });
 
         this.canvas = this.renderer.domElement
