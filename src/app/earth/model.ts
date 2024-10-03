@@ -25,8 +25,8 @@ export class EarthModel {
         this.renderer.xr.enabled = true;  // Certifique-se de que o XR está habilitado
 
         this.renderer.xr.addEventListener('sessionstart', () => {
-            this.cameraController.camera.position.set(0, 0, 10);
-            alert("sessionstart 4")
+            // this.cameraController.camera.position.set(0, 0, 10);
+            alert("sessionstart 5")
         });
 
         this.canvas = this.renderer.domElement
