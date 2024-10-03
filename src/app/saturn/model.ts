@@ -52,7 +52,6 @@ export class SaturnModel {
     loadTextures() {
         const textureLoader = new THREE.TextureLoader();
         this.textures.saturnTexture = textureLoader.load('saturn/saturnmap.jpg');
-        this.textures.saturnBumpMap = textureLoader.load('saturn/saturnbump.jpg');
         this.textures.ringTexture = textureLoader.load('saturn/saturnringcolor.png');
         this.textures.ringTexture.rotation = Math.PI / 2;
         this.textures.ringAlpha = textureLoader.load('saturn/saturnringalpha.png');
@@ -61,8 +60,6 @@ export class SaturnModel {
     loadGeometry() {
         const saturnMaterial = new THREE.MeshStandardMaterial({
             map: this.textures.saturnTexture,
-            bumpMap: this.textures.saturnBumpMap,
-            bumpScale: 0.5,
             metalness: 0.1,  // Controla o brilho da superfície
             roughness: 0.8,   // Controla o quanto a luz se espalha
         });
