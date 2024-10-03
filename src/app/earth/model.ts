@@ -141,7 +141,7 @@ export class EarthModel {
             })
 
             // Atualiza a posição da câmera com base no objeto focado
-            this.cameraController.update(this.satellites[0].mesh.position);
+            //this.cameraController.update(this.satellites[0].mesh.position);
 
             // Renderizar a cena
             this.renderer.render(this.scene, this.cameraController.camera);
