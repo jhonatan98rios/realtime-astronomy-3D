@@ -27,7 +27,8 @@ export class EarthModel {
         this.renderer.xr.addEventListener('sessionstart', () => {
             this.cameraController.camera.position.set(0, 0, 0);
             //this.renderer.vr.getStandingMatrix();
-            alert("sessionstart 1")
+            this.scene.position.x = -2;
+            alert("sessionstart 2")
         });
 
         this.canvas = this.renderer.domElement
