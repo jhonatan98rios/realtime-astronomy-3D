@@ -1,5 +1,6 @@
 import { CameraController } from '@/infra/CameraController'
 import * as THREE from 'three'
+import { MoonModel } from './moonModel'
 
 export class SaturnModel {
 
@@ -13,6 +14,9 @@ export class SaturnModel {
     //@ts-ignore
     ringMesh: THREE.Mesh
     canvas: HTMLCanvasElement
+
+    moons: THREE.Mesh[] = []
+    moonData: MoonModel[] = [] // Para armazenar dados de órbita das luas
 
     constructor() {
         this.scene = new THREE.Scene();
@@ -39,6 +43,7 @@ export class SaturnModel {
         this.loadRings()
         this.loadAtmosphere()
         this.addLight()
+        this.loadMoons()
         this.animate();
     }
 
@@ -128,11 +133,52 @@ export class SaturnModel {
         this.scene.add(atmosphereMesh);
     }
 
+    loadMoons() {
+        const numMoons = 145
+        for (let i = 0; i < numMoons; i++) {
+
+            let moon = new MoonModel({
+                orbitRadius: 3 + Math.random() * 5,
+                orbitSpeed: 0.001 + Math.random() * 0.002,
+                height: (Math.random() - 0.5) * 10,
+                size: 0.05 * Math.random(),
+                angle: Math.random() * Math.PI * 2,
+                textures: {
+                    map: 'earth/moon/moonmap2k.jpg',
+                    bump: 'earth/moon/moonmap2k.jpg',
+                    normal: 'earth/moon/moon_normal_map.jpg',
+                }
+            })
+
+            this.moonData.push(moon);
+            this.moons.push(moon.mesh);
+            this.scene.add(moon.mesh);
+        }
+    }
+
     animate() {
         this.renderer.setAnimationLoop(() => {
             // Atualize a animação aqui (rotação ou outras interações)
             this.ringMesh.rotation.z += 0.001;
+            // Atualiza a posição da câmera com base no objeto focado
+            this.cameraController.update(this.mesh.position);
+
+            // Atualiza as posições das luas
+            this.moonData.forEach((moon) => {
+                moon.animate()
+            });
+
             this.renderer.render(this.scene, this.cameraController.camera);
         });
+    }
+
+    focusOut() {
+        this.cameraController.focusOut()
+    }
+
+    focusOnSaturn() {
+        this.cameraController.followMoon = false; // Desativa o seguimento da Lua
+        this.cameraController.targetPosition.set(0, 0, 3); // Ajuste a posição para focar na Terra
+        this.cameraController.startTransition(false); // Não seguir a Lua
     }
 }
