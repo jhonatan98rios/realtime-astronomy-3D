@@ -34,8 +34,18 @@ export default function Saturn() {
   }
 
   return (
-    <div className="">
-      <main className=""></main>
+    <div className="bg-black">
+      <main className="">
+        <button className="m-2 text-gray-100" onClick={() => model.current?.focusOut()}> Visão total </button>
+        <button className="m-2 text-gray-100" onClick={() => model.current?.focusOnSaturn()}> Zoom </button>
+        <button className="m-2 text-gray-100" onClick={() => navigateTo("/mercury") }> Mercurio </button>
+        <button className="m-2 text-gray-100" onClick={() => navigateTo("/venus") }> Venus </button>
+        <button className="m-2 text-gray-100" onClick={() => navigateTo("/earth") }> Terra </button>
+        <button className="m-2 text-gray-100" onClick={() => navigateTo("/mars") }> Marte </button>
+        <button className="m-2 text-gray-100" onClick={() => navigateTo("/jupiter") }> Jupiter </button>
+        <button className="m-2 text-gray-100" onClick={() => navigateTo("/uranus") }> Urano </button>
+        <button className="m-2 text-gray-100" onClick={() => navigateTo("/neptune") }> Netuno </button>
+      </main>
     </div>
   );
 }
