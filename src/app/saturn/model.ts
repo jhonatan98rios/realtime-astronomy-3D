@@ -137,17 +137,19 @@ export class SaturnModel {
         const numMoons = 145
         for (let i = 0; i < numMoons; i++) {
 
+            const textureLoader = new THREE.TextureLoader();
+            const textures = {
+                moonTexture: textureLoader.load('saturn/moons/texture.jpg'),
+            }
+
             let moon = new MoonModel({
                 orbitRadius: 3 + Math.random() * 5,
                 orbitSpeed: 0.001 + Math.random() * 0.002,
                 height: (Math.random() - 0.5) * 10,
                 size: 0.05 * Math.random(),
                 angle: Math.random() * Math.PI * 2,
-                textures: {
-                    map: 'earth/moon/moonmap2k.jpg',
-                    bump: 'earth/moon/moonmap2k.jpg',
-                    normal: 'earth/moon/moon_normal_map.jpg',
-                }
+                textures: textures,
+                bumpScale:  (Math.random() * 8) + 2
             })
 
             this.moonData.push(moon);

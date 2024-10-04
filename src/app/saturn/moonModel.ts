@@ -1,16 +1,13 @@
 import * as THREE from 'three'
 
 export type MoonModelProps = {
-    textures: {
-        map: string,
-        bump: string,
-        normal: string
-    },
+    textures: { [key: string]: THREE.Texture },
     orbitRadius: number
     orbitSpeed: number
     height: number
     size: number
     angle: number
+    bumpScale: number
 }
 
 export class MoonModel {
@@ -23,6 +20,7 @@ export class MoonModel {
     height: number
     size: number
     angle: number
+    bumpScale: number
 
     constructor(props: MoonModelProps) {
         this.orbitRadius = props.orbitRadius
@@ -30,27 +28,20 @@ export class MoonModel {
         this.height = props.height
         this.size = props.size
         this.angle = props.angle
-        this.loadTextures(props.textures)
+        this.textures = props.textures
+        this.bumpScale = props.bumpScale
         this.loadGeometry()
-    }
-
-    loadTextures(textures: MoonModelProps['textures']) {
-        const textureLoader = new THREE.TextureLoader();
-        this.textures.moonTexture = textureLoader.load(textures.map);
-        this.textures.moonBumpMap = textureLoader.load(textures.bump);
-        this.textures.moonNormalMap = textureLoader.load(textures.normal);
     }
 
     loadGeometry() {
         const moonMaterial = new THREE.MeshPhongMaterial({
             map: this.textures.moonTexture,
-            bumpMap: this.textures.moonBumpMap,  // Aplicando o bump map
-            bumpScale: 1,  // Ajuste a intensidade do relevo 
-            normalMap: this.textures.moonNormalMap,
+            bumpMap: this.textures.moonTexture,  // Aplicando o bump map
+            bumpScale: this.bumpScale,  // Ajuste a intensidade do relevo 
         });
 
         console.log(this.size)
-        const moonGeometry = new THREE.SphereGeometry(this.size, 16, 16);
+        const moonGeometry = new THREE.SphereGeometry(this.size, 8, 8);
         this.mesh = new THREE.Mesh(moonGeometry, moonMaterial);
         this.mesh.castShadow = true
 
