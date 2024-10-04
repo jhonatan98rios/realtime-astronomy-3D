@@ -62,7 +62,7 @@ export class EarthModel {
         const textureLoader = new THREE.TextureLoader();
         this.textures.earthTexture = textureLoader.load('earth/earthmap.jpg');
         this.textures.earthBumpMap = textureLoader.load('earth/earthbump.jpg');
-        this.textures.earthClouds = textureLoader.load('earth/2k_earth_clouds.jpg');
+        this.textures.earthClouds = textureLoader.load('earth/2k_earth_clouds.png');
         this.textures.earthSpecularMap = textureLoader.load('earth/earthspec.jpg');
         this.textures.earthEmissiveMap = textureLoader.load('earth/earthemissivemap.jpg');
     }
@@ -90,7 +90,7 @@ export class EarthModel {
         const atmosphereMaterial = new THREE.MeshPhongMaterial({
             color: 0x00aaff,  // Azul claro
             transparent: true,
-            opacity: 0.25,  // Transparência baixa para um efeito sutil
+            opacity: 0.7,  // Transparência baixa para um efeito sutil
             blending: THREE.AdditiveBlending,
         });
         const atmosphereMesh = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
