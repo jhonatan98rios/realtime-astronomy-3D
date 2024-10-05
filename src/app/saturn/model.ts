@@ -45,7 +45,7 @@ export class SaturnModel {
         const saturnMaterial = new THREE.MeshPhongMaterial({
             map: this.textures.saturnTexture,
             bumpMap: this.textures.saturnBumpMap,
-            bumpScale: 0.05,
+            bumpScale: 0.5,
         });
     
         // Geometria da Terra

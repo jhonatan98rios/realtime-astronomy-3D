@@ -45,7 +45,7 @@ export class JupiterModel {
         const jupiterMaterial = new THREE.MeshPhongMaterial({
             map: this.textures.jupiterTexture,
             bumpMap: this.textures.jupiterBumpMap,
-            bumpScale: 0.05,
+            bumpScale: 0.4,
         });
     
         // Geometria da Terra
