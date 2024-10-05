@@ -1,30 +1,41 @@
 import * as THREE from 'three'
+import { CameraController } from '@/infra/CameraController'
 
 export class VenusModel {
 
     scene: THREE.Scene
-    camera: THREE.PerspectiveCamera
+    cameraController: CameraController
     renderer: THREE.WebGLRenderer
     light?: THREE.DirectionalLight
     textures: { [key: string]: THREE.Texture } = {}
+    //@ts-ignore
+    mesh: THREE.Mesh
+    //@ts-ignore
+    canvas: HTMLCanvasElement
 
     constructor() {
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.cameraController = new CameraController();
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.xr.enabled = true;  // Certifique-se de que o XR está habilitado
 
-        document.body.appendChild(this.renderer.domElement);
+        this.renderer.xr.addEventListener('sessionstart', () => {
+            this.scene.position.z = -3
+            this.scene.position.y = 1
+        });
+
+        this.canvas = this.renderer.domElement
+        document.body.appendChild(this.canvas)
+
         window.addEventListener('resize', () => {
-            this.camera.aspect = window.innerWidth / window.innerHeight;
-            this.camera.updateProjectionMatrix();
+            this.cameraController.resize()
             this.renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        this.addLight()
         this.loadTextures()
         this.loadGeometry()
+        this.addLight()
         this.animate();
     }
 
@@ -38,38 +49,48 @@ export class VenusModel {
         const textureLoader = new THREE.TextureLoader();
         this.textures.venusTexture = textureLoader.load('venus/venusmap.jpg');
         this.textures.venusBumpMap = textureLoader.load('venus/venusbump.jpg');
-        // this.textures.venusClouds = textureLoader.load('venus/venuscloudmaptrans.jpg');
     }
 
     loadGeometry() {
-        const venusMaterial = new THREE.MeshPhongMaterial({
+        const venusMaterial = new THREE.MeshStandardMaterial({
             map: this.textures.venusTexture,
-            bumpMap: this.textures.venusBumpMap,
-            bumpScale: 0.05,
+            metalness: 0.1,  // Controla o brilho da superfície
+            roughness: 0.8,   // Controla o quanto a luz se espalha
+            bumpScale: 0.8,
+            bumpMap: this.textures.venusBumpMap
         });
     
         // Geometria da Terra
         const venusGeometry = new THREE.SphereGeometry(1, 32, 32);
-        const venusMesh = new THREE.Mesh(venusGeometry, venusMaterial);
-        this.scene.add(venusMesh);
+        this.mesh = new THREE.Mesh(venusGeometry, venusMaterial);
 
-        // Nuvens da Terra
-        // const cloudGeometry = new THREE.SphereGeometry(1, 32, 32);
-        // const cloudMaterial = new THREE.MeshLambertMaterial({
-        //     map: this.textures.venusClouds,
-        //     transparent: true,
-        // });
-        //const cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
-        //this.scene.add(cloudMesh);
-        this.camera.position.set(0, 0, 3); // Ajuste para altura VR e posição adequada
+        this.mesh.rotation.z = THREE.MathUtils.degToRad(8);
+        this.mesh.castShadow = true
+        
+        this.scene.add(this.mesh);
+
+        this.cameraController.camera.position.set(0, 0, 3); // Ajuste para altura VR e posição adequada
     }
 
     animate() {
         this.renderer.setAnimationLoop(() => {
-            // Atualize a animação aqui (rotação ou outras interações)
-            this.renderer.render(this.scene, this.camera);
+            this.mesh.rotation.y += 0.001;
+            
+            // Atualiza a posição da câmera com base no objeto focado
+            this.cameraController.update(this.mesh.position);
+
+            this.renderer.render(this.scene, this.cameraController.camera);
         });
     }
 
+    focusOut() {
+        this.cameraController.focusOut()
+    }
+
+    focusOnVenus() {
+        this.cameraController.followMoon = false; // Desativa o seguimento da Lua
+        this.cameraController.targetPosition.set(0, 0, 2); // Ajuste a posição para focar na Terra
+        this.cameraController.startTransition(false); // Não seguir a Lua
+    }
 }
 

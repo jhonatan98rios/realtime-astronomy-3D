@@ -162,6 +162,8 @@ export class SaturnModel {
         this.renderer.setAnimationLoop(() => {
             // Atualize a animação aqui (rotação ou outras interações)
             this.ringMesh.rotation.z += 0.001;
+            this.mesh.rotation.y += 0.001;
+
             // Atualiza a posição da câmera com base no objeto focado
             this.cameraController.update(this.mesh.position);
 

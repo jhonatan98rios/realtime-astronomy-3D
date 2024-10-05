@@ -90,7 +90,7 @@ export class EarthModel {
         const atmosphereMaterial = new THREE.MeshPhongMaterial({
             color: 0x00aaff,  // Azul claro
             transparent: true,
-            opacity: 0.7,  // Transparência baixa para um efeito sutil
+            opacity: 0.3,  // Transparência baixa para um efeito sutil
             blending: THREE.AdditiveBlending,
         });
         const atmosphereMesh = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
@@ -102,7 +102,7 @@ export class EarthModel {
         const cloudMaterial = new THREE.MeshPhongMaterial({
             map: this.textures.earthClouds,
             transparent: true,
-            opacity: 0.7,  // Semitransparente
+            opacity: 1,  // Semitransparente
         });
         this.cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
         this.scene.add(this.cloudMesh);

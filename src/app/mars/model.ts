@@ -1,5 +1,6 @@
 import { CameraController } from '@/infra/CameraController'
 import * as THREE from 'three'
+import { MoonModel } from './moonModel'
 
 export class MarsModel {
 
@@ -11,6 +12,9 @@ export class MarsModel {
     canvas: HTMLCanvasElement
     //@ts-ignore
     mesh: THREE.Mesh
+
+    moons: THREE.Mesh[] = []
+    moonData: MoonModel[] = [] // Para armazenar dados de órbita das luas
 
     constructor() {
         this.scene = new THREE.Scene();
@@ -36,13 +40,14 @@ export class MarsModel {
         this.loadGeometry()
         this.loadAtmosphere()
         this.addLight()
+        this.loadMoons()
         this.animate();
     }
 
     addLight() {
-        const ambientLight = new THREE.AmbientLight(0x404040, 0.1); // Luz suave e difusa
-        ambientLight.castShadow = true
-        this.scene.add(ambientLight);
+        // const ambientLight = new THREE.AmbientLight(0x404040, 0.1); // Luz suave e difusa
+        // ambientLight.castShadow = true
+        // this.scene.add(ambientLight);
 
         this.light = new THREE.DirectionalLight(0xffffff, 1);
         this.light.position.set(5, 3, 5);
@@ -91,6 +96,31 @@ export class MarsModel {
         this.scene.add(atmosphereMesh);
     }
 
+    loadMoons() {
+        const numMoons = 2
+        for (let i = 0; i < numMoons; i++) {
+
+            const textureLoader = new THREE.TextureLoader();
+            const textures = {
+                moonTexture: textureLoader.load('neptune/moons/texture.jpg'),
+            }
+
+            let moon = new MoonModel({
+                orbitRadius: 3 + Math.random() * 5,
+                orbitSpeed: 0.001 + Math.random() * 0.002,
+                height: (Math.random() - 0.5) * 10,
+                size: 0.05 * Math.random(),
+                angle: Math.random() * Math.PI * 2,
+                textures: textures,
+                bumpScale:  (Math.random() * 8) + 2
+            })
+
+            this.moonData.push(moon);
+            this.moons.push(moon.mesh);
+            this.scene.add(moon.mesh);
+        }
+    }
+
     animate() {
         this.renderer.setAnimationLoop(() => {
             // Atualize a animação aqui (rotação ou outras interações)
@@ -108,6 +138,7 @@ export class MarsModel {
     }
 
     focusOnMars() {
+        this.cameraController.followMoon = false; // Desativa o seguimento da Lua
         this.cameraController.focusOnPlanet();
         window.history.pushState({}, '', '#');
     }
