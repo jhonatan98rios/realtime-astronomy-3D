@@ -44,6 +44,7 @@ export class SaturnModel {
         this.loadAtmosphere()
         this.addLight()
         this.loadMoons()
+        this.generateStars()
         this.animate();
     }
 
@@ -184,5 +185,47 @@ export class SaturnModel {
         this.cameraController.followMoon = false; // Desativa o seguimento da Lua
         this.cameraController.targetPosition.set(0, 0, 3); // Ajuste a posição para focar na Terra
         this.cameraController.startTransition(false); // Não seguir a Lua
+    }
+    generateStars() {
+        const starGeometry = new THREE.BufferGeometry();
+        const starMaterial = new THREE.PointsMaterial({
+          color: 0xffffff, // Cor branca para as estrelas
+          size: 1, // Tamanho padrão das estrelas
+          sizeAttenuation: true, // Faz com que as estrelas fiquem menores conforme se distanciam
+        });
+    
+        const starCount = 3000; // Quantidade de estrelas
+        const positions = new Float32Array(starCount * 3); // 3 valores para x, y, z de cada estrela
+    
+        const minDistance = 500; // Distância mínima de 100 unidades em todas as direções
+    
+        for (let i = 0; i < starCount; i++) {
+          let x, y, z;
+          do {
+            // Gera coordenadas aleatórias dentro de um volume cúbico de 2000x2000x2000
+            x = THREE.MathUtils.randFloatSpread(2000);
+            y = THREE.MathUtils.randFloatSpread(2000);
+            z = THREE.MathUtils.randFloatSpread(2000);
+          } while (
+            Math.abs(x) < minDistance &&
+            Math.abs(y) < minDistance &&
+            Math.abs(z) < minDistance
+          );
+          // Garante que a estrela esteja fora da zona mínima de 100 unidades em todas as direções
+    
+          positions[i * 3] = x;
+          positions[i * 3 + 1] = y;
+          positions[i * 3 + 2] = z;
+        }
+    
+        // Atribui as posições geradas à geometria
+        starGeometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(positions, 3)
+        );
+    
+        // Cria o objeto de partículas (estrelas) e o adiciona à cena
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        this.scene.add(stars);
     }
 }

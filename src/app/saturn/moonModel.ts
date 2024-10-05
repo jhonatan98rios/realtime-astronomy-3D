@@ -40,7 +40,6 @@ export class MoonModel {
             bumpScale: this.bumpScale,  // Ajuste a intensidade do relevo 
         });
 
-        console.log(this.size)
         const moonGeometry = new THREE.SphereGeometry(this.size, 8, 8);
         this.mesh = new THREE.Mesh(moonGeometry, moonMaterial);
         this.mesh.castShadow = true
