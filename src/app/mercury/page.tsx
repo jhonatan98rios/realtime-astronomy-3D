@@ -4,12 +4,16 @@ import { useEffect, useRef } from "react";
 import { MercuryModel } from "./model";
 import { VRButton } from "three/addons/webxr/VRButton.js";
 import { useRouter } from "next/navigation";
+import useSpeech from "@/components/TextToSpeech";
+import { dialog } from "./content";
 
 export default function Mars() {
 
   const router = useRouter()
   const initialized = useRef(false)
   const model = useRef<MercuryModel>()
+
+  useSpeech(dialog)
 
   useEffect(() => {
 

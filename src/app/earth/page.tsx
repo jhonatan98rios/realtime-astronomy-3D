@@ -4,6 +4,9 @@ import { useEffect, useRef } from "react";
 import { EarthModel } from "./model";
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 import { useRouter } from "next/navigation";
+import useSpeech from "@/components/TextToSpeech";
+import { dialog } from "./content";
+import { text } from "stream/consumers";
 
 export default function Earth() {
 
@@ -11,12 +14,19 @@ export default function Earth() {
   const initialized = useRef(false)
   const model = useRef<EarthModel>()
 
+  useSpeech(dialog)
+
   useEffect(() => {
 
     if (initialized.current) return
     initialized.current = true
     model.current = new EarthModel()
-    document.body.appendChild(VRButton.createButton(model.current.renderer));
+    let btn = VRButton.createButton(model.current.renderer)
+    document.body.appendChild(btn);
+    
+    setTimeout(() => {
+      btn.click();
+    }, 500)
 
   }, [])
 

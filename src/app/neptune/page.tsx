@@ -3,9 +3,13 @@
 import { useEffect, useRef } from "react";
 import { VRButton } from "three/addons/webxr/VRButton.js";
 import { NeptuneModel } from "./model";
+import useSpeech from "@/components/TextToSpeech";
+import { dialog } from "./content";
 
 export default function Mars() {
   const initialized = useRef(false);
+
+  useSpeech(dialog) 
 
   useEffect(() => {
     if (initialized.current) return;

@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { MarsModel } from "./model";
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 import { useRouter } from "next/navigation";
+import useSpeech from "@/components/TextToSpeech";
+import { dialog } from "./content";
 
 export default function Mars() {
 
@@ -11,12 +13,24 @@ export default function Mars() {
   const initialized = useRef(false)
   const model = useRef<MarsModel>()
 
+
+  useSpeech(dialog) 
+
   useEffect(() => {
 
     if (initialized.current) return
     initialized.current = true
     model.current = new MarsModel()
     document.body.appendChild(VRButton.createButton(model.current.renderer));
+
+    setTimeout(()=>{
+      
+      //btn.click();
+     
+
+
+
+    }, 500)
   }, [])
 
   function navigateTo(route: string) {

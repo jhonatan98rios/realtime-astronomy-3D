@@ -4,12 +4,16 @@ import { useEffect, useRef } from "react";
 import { VRButton } from "three/addons/webxr/VRButton.js";
 import { SaturnModel } from "./model";
 import { useRouter } from "next/navigation";
+import useSpeech from "@/components/TextToSpeech";
+import { dialog } from "./content";
 
 export default function Saturn() {
 
   const router = useRouter()
   const initialized = useRef(false)
   const model = useRef<SaturnModel>()
+
+  useSpeech(dialog)
 
 
   useEffect(() => {
