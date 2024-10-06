@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import VoiceCommand from "../components/VoiceCommand"; 
 
 
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+      <VoiceCommand />
         {children}
       </body>
     </html>
