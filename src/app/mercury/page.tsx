@@ -9,7 +9,7 @@ import { dialog } from "./content";
 import Cookie from "js-cookie"; // For managing cookies
 import { getContent } from "@/locales/translation"; // Import translation function
 
-export default function Mars() {
+export default function Mercury() {
   const pathname = usePathname();
   const router = useRouter()
   const initialized = useRef(false)

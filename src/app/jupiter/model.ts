@@ -65,6 +65,7 @@ export class JupiterModel {
     loadTextures() {
         const textureLoader = new THREE.TextureLoader();
         this.textures.jupiterTexture = textureLoader.load('jupiter/jupitermap.jpg');
+        this.textures.jupiterBumpMap = textureLoader.load('jupiter/jupiterbump.jpg');
         this.textures.ringTexture = textureLoader.load('jupiter/jupiterringcolourSat.png');
         this.textures.ringAlpha = textureLoader.load('jupiter/jupiteralphaSat.png');
         this.textures.ringTexture.rotation = Math.PI / 2;
