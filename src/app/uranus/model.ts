@@ -45,7 +45,7 @@ export class UranusModel {
         const uranusMaterial = new THREE.MeshPhongMaterial({
             map: this.textures.uranusTexture,
             bumpMap: this.textures.uranusBumpMap,
-            bumpScale: 0.05,
+            bumpScale: 1,
         });
     
         // Geometria da Terra

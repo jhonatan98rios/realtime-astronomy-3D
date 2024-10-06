@@ -73,8 +73,11 @@ export class SaturnModel {
     loadGeometry() {
         const saturnMaterial = new THREE.MeshStandardMaterial({
             map: this.textures.saturnTexture,
+            bumpMap: this.textures.saturnBumpMap,
+            bumpScale: 0.5,
             metalness: 0.1,  // Controla o brilho da superfície
             roughness: 0.8,   // Controla o quanto a luz se espalha
+
         });
     
         // Geometria de Saturno

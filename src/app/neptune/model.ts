@@ -45,7 +45,7 @@ export class NeptuneModel {
         const neptuneMaterial = new THREE.MeshPhongMaterial({
             map: this.textures.neptuneTexture,
             bumpMap: this.textures.neptuneBumpMap,
-            bumpScale: 0.05,
+            bumpScale: 0.5,
         });
     
         // Geometria da Terra
