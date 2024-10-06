@@ -37,6 +37,11 @@ const VoiceCommand = () => {
             setError(''); // Limpa erros
         };
 
+        recognition.onend = () => {
+            recognition.start();
+            };
+
+
         recognition.onresult = (event: any) => {
             const currentTranscript = event.results[event.resultIndex][0].transcript.trim();
 
