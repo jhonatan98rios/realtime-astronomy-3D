@@ -2,10 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { EarthModel } from "./model";
+
 import { VRButton } from "three/addons/webxr/VRButton.js";
 import { usePathname, useRouter } from "next/navigation";
 import Cookie from "js-cookie"; // For managing cookies
 import { getContent } from "@/locales/translation"; // Import translation function
+import useSpeech from "@/components/TextToSpeech";
+import { dialog } from "./content";
+
 
 export default function Earth() {
   const pathname = usePathname();
@@ -14,13 +18,20 @@ export default function Earth() {
   const model = useRef<EarthModel>();
 
   const [planetNames, setPlanetNames] = useState<string[]>([]);
-  const [title, setTitle] = useState<string>("");
+
+  //useSpeech(dialog)
 
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-    model.current = new EarthModel();
-    document.body.appendChild(VRButton.createButton(model.current.renderer));
+
+    if (initialized.current) return
+    initialized.current = true
+    model.current = new EarthModel()
+    let btn = VRButton.createButton(model.current.renderer)
+    document.body.appendChild(btn);
+    
+    setTimeout(() => {
+      //btn.click();
+    }, 500)
 
     // Get language from cookie or browser
     const browserLanguage = navigator.language;
@@ -40,7 +51,6 @@ export default function Earth() {
     const content = getContent(language);
 
     // Set the title and planet names from localized content
-    setTitle(content.menu.title);
     setPlanetNames(content.menu.planets.map((planet) => planet.name));
   }, []);
 

@@ -2,10 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { MarsModel } from "./model";
+
 import { VRButton } from "three/addons/webxr/VRButton.js";
 import { usePathname, useRouter } from "next/navigation";
 import Cookie from "js-cookie"; // For managing cookies
 import { getContent } from "@/locales/translation"; // Import translation function
+import useSpeech from "@/components/TextToSpeech";
+import { dialog } from "./content";
+
 
 export default function Mars() {
   const pathname = usePathname();
@@ -14,7 +18,8 @@ export default function Mars() {
   const model = useRef<MarsModel>();
 
   const [planetNames, setPlanetNames] = useState<string[]>([]);
-  const [title, setTitle] = useState<string>("");
+
+  //useSpeech(dialog) 
 
   useEffect(() => {
     if (initialized.current) return;
@@ -40,9 +45,9 @@ export default function Mars() {
     const content = getContent(language);
 
     // Set the title and planet names from localized content
-    setTitle(content.menu.title);
     setPlanetNames(content.menu.planets.map((planet) => planet.name));
-  }, []);
+  }, [])
+
 
   function navigateTo(route: string) {
     model.current?.cameraController.zoomOut();
