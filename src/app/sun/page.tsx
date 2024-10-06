@@ -1,21 +1,24 @@
-"use client";
+'use client'
 
 import { useEffect, useRef } from "react";
-import { VRButton } from "three/addons/webxr/VRButton.js";
-import { NeptuneModel } from "./model";
+import { SunModel } from "./model";
+import { VRButton } from 'three/addons/webxr/VRButton.js';
 import { useRouter } from "next/navigation";
 
-export default function Mars() {
+export default function Sun() {
+
   const router = useRouter()
   const initialized = useRef(false)
-  const model = useRef<NeptuneModel>()
+  const model = useRef<SunModel>()
 
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-    model.current = new NeptuneModel();
+
+    if (initialized.current) return
+    initialized.current = true
+    model.current = new SunModel()
     document.body.appendChild(VRButton.createButton(model.current.renderer));
-  }, []);
+
+  }, [])
 
   function navigateTo(route: string) {
     model.current?.cameraController.zoomOut()
@@ -28,19 +31,18 @@ export default function Mars() {
       router.push(route)
     }, 500)
   }
-
   return (
     <div className="bg-black">
       <main className="">
         <button className="m-2 text-gray-100" onClick={() => model.current?.focusOut()}> Visão total </button>
-        <button className="m-2 text-gray-100" onClick={() => model.current?.focusOnNeptune()}> Zoom </button>
+        <button className="m-2 text-gray-100" onClick={() => model.current?.focusOnSun()}> Zoom </button>
         <button className="m-2 text-gray-100" onClick={() => navigateTo("/mercury") }> Mercurio </button>
         <button className="m-2 text-gray-100" onClick={() => navigateTo("/venus") }> Venus </button>
-        <button className="m-2 text-gray-100" onClick={() => navigateTo("/earth") }> Terra </button>
         <button className="m-2 text-gray-100" onClick={() => navigateTo("/mars") }> Marte </button>
         <button className="m-2 text-gray-100" onClick={() => navigateTo("/jupiter") }> Jupiter </button>
         <button className="m-2 text-gray-100" onClick={() => navigateTo("/saturn") }> Saturno </button>
         <button className="m-2 text-gray-100" onClick={() => navigateTo("/uranus") }> Urano </button>
+        <button className="m-2 text-gray-100" onClick={() => navigateTo("/neptune") }> Netuno </button>
       </main>
     </div>
   );
