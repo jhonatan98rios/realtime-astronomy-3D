@@ -24,9 +24,10 @@ export class EarthModel {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.xr.enabled = true;  // Certifique-se de que o XR está habilitado
 
-        // this.renderer.xr.addEventListener('sessionstart', () => {
-        //     this.cameraController.focusOut() // Define uma posição fixada ao entrar no VR
-        // });
+        this.renderer.xr.addEventListener('sessionstart', () => {
+            this.scene.position.z = -1.5
+            this.scene.position.y = 1
+        });
 
         this.canvas = this.renderer.domElement
         document.body.appendChild(this.canvas)
@@ -61,7 +62,7 @@ export class EarthModel {
         const textureLoader = new THREE.TextureLoader();
         this.textures.earthTexture = textureLoader.load('earth/earthmap.jpg');
         this.textures.earthBumpMap = textureLoader.load('earth/earthbump.jpg');
-        this.textures.earthClouds = textureLoader.load('earth/2k_earth_clouds.jpg');
+        this.textures.earthClouds = textureLoader.load('earth/2k_earth_clouds.png');
         this.textures.earthSpecularMap = textureLoader.load('earth/earthspec.jpg');
         this.textures.earthEmissiveMap = textureLoader.load('earth/earthemissivemap.jpg');
     }
@@ -89,7 +90,7 @@ export class EarthModel {
         const atmosphereMaterial = new THREE.MeshPhongMaterial({
             color: 0x00aaff,  // Azul claro
             transparent: true,
-            opacity: 0.25,  // Transparência baixa para um efeito sutil
+            opacity: 0.7,  // Transparência baixa para um efeito sutil
             blending: THREE.AdditiveBlending,
         });
         const atmosphereMesh = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
@@ -159,4 +160,3 @@ export class EarthModel {
         this.cameraController.focusOnMoon(moonPosition);
     }
 }
-

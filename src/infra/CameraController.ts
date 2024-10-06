@@ -45,7 +45,7 @@ export class CameraController {
     }
 
     // Inicia a transição
-    private startTransition(follow: boolean) {
+    startTransition(follow: boolean) {
         if (!this.isTransitioning) {
             this.isTransitioning = true;
             this.followMoon = follow; // Define se deve seguir a Lua
