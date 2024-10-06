@@ -9,7 +9,7 @@ import Cookie from "js-cookie"; // For managing cookies
 import { getContent } from "@/locales/translation"; // Import translation function
 import useSpeech from "@/components/TextToSpeech";
 import { dialog } from "./content";
-
+import { useMicrofonePermission } from "@/components/permissions";
 
 export default function Earth() {
   const pathname = usePathname();
@@ -19,19 +19,24 @@ export default function Earth() {
 
   const [planetNames, setPlanetNames] = useState<string[]>([]);
 
-  useSpeech(dialog)
+  useSpeech(dialog);
 
   useEffect(() => {
-
-    if (initialized.current) return
-    initialized.current = true
-    model.current = new EarthModel()
-    let btn = VRButton.createButton(model.current.renderer)
+    if (initialized.current) return;
+    initialized.current = true;
+    model.current = new EarthModel();
+    let btn = VRButton.createButton(model.current.renderer);
     document.body.appendChild(btn);
-    
+
     setTimeout(() => {
-      btn.click();
-    }, 200)
+      useMicrofonePermission(() => {
+        btn.click();
+      });
+    }, 200);
+
+    setTimeout(() => {
+      model.current?.focusOnEarth();
+    }, 3000);
 
     // Get language from cookie or browser
     const browserLanguage = navigator.language;
@@ -69,7 +74,7 @@ export default function Earth() {
   return (
     <div className="bg-black">
       <main className="">
-        <button
+        {/* <button
           className="m-2 text-gray-100"
           onClick={() => model.current?.focusOut()}
         >
@@ -86,7 +91,7 @@ export default function Earth() {
           onClick={() => model.current?.focusOnMoon()}
         >
           Lua
-        </button>
+        </button> */}
 
         {/* Dynamic buttons for each planet */}
         {planetNames.map((name, index) => {
