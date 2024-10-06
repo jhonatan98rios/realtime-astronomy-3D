@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { commands } from './Commands';
 import './Style.css'; 
-import useSpeech from './TextToSpeech'; // Certifique-se de importar o hook
 
 declare global {
     interface Window {
@@ -16,7 +15,6 @@ const VoiceCommand = () => {
     const [transcript, setTranscript] = useState('');
     const [showIcon, setShowIcon] = useState(false); // Estado para mostrar/ocultar o ícone do microfone
     const [error, setError] = useState(''); // Estado para armazenar erros
-    const speechText = useSpeech(transcript); // Use o hook para falar
 
     const navigateTo = (destination: string) => {
         window.location.href = `/${destination}`;  

@@ -25,7 +25,12 @@ export default function Mars() {
     if (initialized.current) return;
     initialized.current = true;
     model.current = new MarsModel();
-    document.body.appendChild(VRButton.createButton(model.current.renderer));
+    let btn = VRButton.createButton(model.current.renderer)
+    document.body.appendChild(btn);
+    
+    setTimeout(() => {
+      btn.click();
+    }, 200)
 
     // Get language from cookie or browser
     const browserLanguage = navigator.language;

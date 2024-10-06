@@ -25,7 +25,11 @@ export default function Mercury() {
     initialized.current = true;
     model.current = new MercuryModel()
     let btn = VRButton.createButton(model.current.renderer)
-    document.body.appendChild(btn)
+    document.body.appendChild(btn);
+    
+    setTimeout(() => {
+      btn.click();
+    }, 200)
 
     // Get language from cookie or browser
     const browserLanguage = navigator.language;

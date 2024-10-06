@@ -30,8 +30,8 @@ export default function Earth() {
     document.body.appendChild(btn);
     
     setTimeout(() => {
-      //btn.click();
-    }, 500)
+      btn.click();
+    }, 200)
 
     // Get language from cookie or browser
     const browserLanguage = navigator.language;

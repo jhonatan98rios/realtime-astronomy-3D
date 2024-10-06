@@ -20,7 +20,6 @@ export default function Saturn() {
 
   //useSpeech(dialog)
 
-
   useEffect(() => {
 
     if (initialized.current) return;
@@ -28,6 +27,10 @@ export default function Saturn() {
     model.current = new SaturnModel();
     let btn = VRButton.createButton(model.current.renderer)
     document.body.appendChild(btn);
+    
+    setTimeout(() => {
+      btn.click();
+    }, 200)
 
     // Get language from cookie or browser
     const browserLanguage = navigator.language;
