@@ -126,7 +126,7 @@ const content: Record<string, Content> = {
     menu: {
       title: "行星",
       planets: [
-        { name: "水金", route: "mercury" },
+        { name: "水星", route: "mercury" },
         { name: "金星", route: "venus" },
         { name: "地球", route: "earth" },
         { name: "火星", route: "mars" },
@@ -147,7 +147,7 @@ const content: Record<string, Content> = {
       neptune: "离太阳最远的行星。",
     },
     questions: {
-      mercury: "水金的表面温度是多少？",
+      mercury: "水星的表面温度是多少？",
       venus: "为什么金星常被称为地球的双胞胎？",
       earth: "是什么让地球与众不同？",
       mars: "火星上有哪些水的迹象？",
