@@ -18,7 +18,7 @@ export default function Saturn() {
 
   const [planetNames, setPlanetNames] = useState<string[]>([]);
 
-  //useSpeech(dialog)
+  useSpeech(dialog)
 
   useEffect(() => {
 

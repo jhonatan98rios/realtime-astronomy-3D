@@ -17,7 +17,7 @@ export default function Uranus() {
   const model = useRef<UranusModel>()
 
   const [planetNames, setPlanetNames] = useState<string[]>([]);
-  //useSpeech(dialog)
+  useSpeech(dialog)
 
   useEffect(() => {
 

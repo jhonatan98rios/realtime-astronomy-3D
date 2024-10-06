@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 const useSpeech = (text: string) => {
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
 
-
-
     // Função para carregar as vozes como uma Promise
     const loadVoices = (): Promise<SpeechSynthesisVoice[]> => {
         return new Promise((resolve) => {
@@ -23,7 +21,7 @@ const useSpeech = (text: string) => {
 
     const speak = (text: string) => {
         const utterance = new SpeechSynthesisUtterance(text);
-        const portugueseVoice = voices.find(voice => voice.lang === 'pt-BR');
+        const portugueseVoice = voices[2]
 
         if (portugueseVoice) {
             utterance.voice = portugueseVoice;

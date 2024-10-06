@@ -17,7 +17,7 @@ export default function Mercury() {
 
   const [planetNames, setPlanetNames] = useState<string[]>([]);
 
-  //useSpeech(dialog)
+  useSpeech(dialog)
 
   useEffect(() => {
 

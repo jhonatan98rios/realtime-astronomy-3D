@@ -86,7 +86,6 @@ const VoiceCommand = () => {
 
     return (
         <div style={{ position: 'relative' }}>
-            {error && <p style={{ color: 'red' }}>{error}</p>} {/* Exibe erros, se houver */}
             {/* Exibe o ícone do microfone se estiver escutando */}
             {showIcon && (
                 <span
@@ -98,7 +97,6 @@ const VoiceCommand = () => {
                     🎤
                 </span>
             )}
-            <p>Transcrição: {transcript}</p> {/* Mostra a transcrição atual */}
         </div>
     );
 };

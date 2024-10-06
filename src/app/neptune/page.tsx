@@ -18,7 +18,7 @@ export default function Neptune() {
 
   const [planetNames, setPlanetNames] = useState<string[]>([]);
 
-  //useSpeech(dialog) 
+  useSpeech(dialog) 
 
   useEffect(() => {
     if (initialized.current) return;

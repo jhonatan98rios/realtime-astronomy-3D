@@ -19,7 +19,7 @@ export default function Earth() {
 
   const [planetNames, setPlanetNames] = useState<string[]>([]);
 
-  //useSpeech(dialog)
+  useSpeech(dialog)
 
   useEffect(() => {
 
